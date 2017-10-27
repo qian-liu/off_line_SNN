@@ -19,19 +19,19 @@ tmp_y = sio.loadmat('mnist.mat')['test_y']
 tmp_y = np.argmax(tmp_y, axis=0)
 
 # configuation file when trining in Matlab
-config_file = sys.argv[1]
-f = sio.loadmat(config_file)
-e = f['opts'][0]['numepochs'][0][0][0] #num_epochs
-r = f['opts'][0]['randseed'][0][0][0]    #randseed
+#config_file = sys.argv[1]
+#f = sio.loadmat(config_file)
+#e = f['opts'][0]['numepochs'][0][0][0] #num_epochs
+#r = f['opts'][0]['randseed'][0][0][0]    #randseed
 
 # activation function configuation
-af_file = sys.argv[2]
+af_file = sys.argv[1]
 f = sio.loadmat(af_file)
 tau_syn = f['af'][0]['tau_syn'][0][0][0] * 1000. #ms
 scale_K = f['af'][0]['K'][0][0][0]
 
 # trained weights
-cnn_file = sys.argv[3]               
+cnn_file = sys.argv[2]               
 
 
 dur_test = 1000  #ms

@@ -2,6 +2,8 @@ import cnn_utils as cnnu
 import itertools
 import scipy.io as sio
 import numpy as np
+import sys
+
 tmp_y = sio.loadmat('mnist.mat')['test_y']
 tmp_y = np.argmax(tmp_y, axis=0)
 
@@ -43,7 +45,7 @@ def get_result(spikes, time_window):
     
     
     
-def result_analysis(mat_dir, proc, trial):
+def result_analysis(mat_dir):
     predict_max = -1*np.ones(num_mnist)
     fastest_neuron = -1*np.ones(num_mnist)
     respond_time = dur_test*np.ones(num_mnist)
@@ -54,7 +56,7 @@ def result_analysis(mat_dir, proc, trial):
     
     for time_w in time_ws:
         for test_offset in range(0, num_mnist, num_test):
-            spike_f = '%s/%s_%d/spike_%d.npy'%(mat_dir, proc, trial, test_offset)
+            spike_f = '%s/spike_%d.npy'%(mat_dir, test_offset)
             spikes = np.load(spike_f)
             predict, fastest, latency, correct_l, digit_l = get_result(spikes, time_w)
             predict_max[test_offset:test_offset+num_test] = predict
@@ -67,19 +69,18 @@ def result_analysis(mat_dir, proc, trial):
     return result_timew
 
 dur_test = 1000
-num_mnist = 9000 #10000 
 num_digit = 10
-proc_list = ['nsp'] #'noisy_softplus', 'softplus']
-ac_list = np.zeros((len(proc_list),3))
-index_list = [4]#, 5, 6]
-time_ws = [100,400,1000]
 num_test = 100
 num_output = 10
 silence = 20
 num_cluster = 1
-for i in range(len(proc_list)):
-    for j in range(len(index_list)):
-        #result_timew = result_analysis('../trained_weights/small_5', proc_list[i], index_list[j]) #noisy_softplus relu
-        result_timew = result_analysis('../results/tidy_small', proc_list[i], index_list[j]) #noisy_softplus relu
-        for k in range(len(time_ws)):
-            print result_timew[k]/float(num_mnist)
+
+
+result_dir = sys.argv[1]
+num_mnist = int(sys.argv[2]) #10000 
+time_ws = map(int, sys.argv[3].split(',')) # for example 100,400,1000 ms
+print time_ws
+result_timew = result_analysis(result_dir) #noisy_softplus relu
+for k in range(len(time_ws)):
+    result_str = 'Time window: %d ms, accuracy: %.2f%%'%(time_ws[k],result_timew[k]/float(num_mnist)*100.)
+    print result_str

@@ -15,5 +15,5 @@ off-line training of SNN in Matlab and SNN testing in PyNN lauguage (still under
 The version I am using is PyNN 0.7.5 + Nest 2.2.2, it will probably not working for other combinations of these tools.  
 1. To run an example go to the code_snn_nest folder, and run   
 **./sh_test.sh**    
-2. You can also analysis the results with different number of testing images, e.g. first 100 images, and various length of testing times, such as 100,400,1000 ms
+2. You can also analysis the results with different number of testing images, e.g. first 100 images, and various length of testing times, such as 100,400,1000 ms  
 **python read_results.py ../results/Noisy_Softplus_e20_r4_acc98.66_s/ 100 100,400,1000**

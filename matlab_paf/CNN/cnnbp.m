@@ -59,12 +59,12 @@ function net = cnnbp(net, y, opts, af)
                      z = z + convn(net.layers{l + 1}.d{j}, rot180(net.layers{l + 1}.k{i}{j}), 'full');
                 end
                 
-                %net.layers{l}.d{i} = z;
-                if strcmp(af.name, 'Noisy_Softplus') %  output delta
-                    net.layers{l}.d{i} = z .* paf_der(net.layers{l}.net{i}, net.layers{l}.noise{i}, af); %%please comment here!!!
-                else
-                    net.layers{l}.d{i} = z .* paf_der(net.layers{l}.net{i}); %%please comment here!!!
-                end
+                net.layers{l}.d{i} = z;
+%                 if strcmp(af.name, 'Noisy_Softplus') %  output delta
+%                     net.layers{l}.d{i} = z .* paf_der(net.layers{l}.net{i}, net.layers{l}.noise{i}, af); %%please comment here!!!
+%                 else
+%                     net.layers{l}.d{i} = z .* paf_der(net.layers{l}.net{i}); %%please comment here!!!
+%                 end
             end
         end
     end

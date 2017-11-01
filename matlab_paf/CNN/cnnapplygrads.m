@@ -4,6 +4,8 @@ function net = cnnapplygrads(net, opts)
             for j = 1 : numel(net.layers{l}.a)
                 for ii = 1 : numel(net.layers{l - 1}.a)
                     net.layers{l}.k{ii}{j} = net.layers{l}.k{ii}{j} - opts.alpha(l) * net.layers{l}.dk{ii}{j};
+                    net.layers{l}.k{ii}{j} = min(net.layers{l}.k{ii}{j},opts.max_w); 
+                    net.layers{l}.k{ii}{j} = max(net.layers{l}.k{ii}{j},-opts.max_w); 
                 end
                 if opts.bias
                     net.layers{l}.b{j} = net.layers{l}.b{j} - opts.alpha(l)  * net.layers{l}.db{j};

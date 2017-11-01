@@ -1,11 +1,14 @@
-function test_example_CNN(af_name)
-    %adding the working path of the tool
-    addpath(genpath('../../matlab_paf'));
+function test_example_CNN(af_file, config_file, result_file)
+%   parameters:
+%     af_file: activation function parameters e.g. ReLU_config.mat
+%     config_file: parmeters for network training, such as network
+%       architecture and number of epochs. e.g. small_config
+%     result_file: name of the output file containing the trained weights
     
     %loading
     load mnist_uint8; %database MNIST
-    load(sprintf('%s.mat',af_name)); %parameters for the Parametric Activation Function (PAF)
-    load('default_config.mat'); %parameters for CNN training
+    load(af_file); %parameters for the Parametric Activation Function (PAF)
+    load(config_file); %parameters for CNN training
     opts.alpha = af.alpha; %learning rate
     
     train_x = double(reshape(train_x',28,28,60000))/255; %training images
@@ -16,6 +19,8 @@ function test_example_CNN(af_name)
     %equivalent input abstract K=200Hz and tau_syn=0.005
     train_x =  train_x * af.K * af.tau_syn;
     test_x = test_x * af.K * af.tau_syn;
+    train_y =  train_y * af.K * af.tau_syn;
+    test_y = test_y * af.K * af.tau_syn;
     %% ex1 Train a 6c-2s-12c-2s Convolutional neural network as default
     rand('state',opts.randseed); %set random seed
 
@@ -28,15 +33,26 @@ function test_example_CNN(af_name)
     };
     
 
-    
     cnn = cnnsetup(cnn, train_x, train_y, opts, af);
     cnn = cnntrain(cnn, train_x, train_y, opts, af);
+%     cnn = cnnsetup(cnn, train_x(:,:,1:100), train_y(:,1:100), opts, af);
+%     cnn = cnntrain(cnn, train_x(:,:,1:100), train_y(:,1:100), opts, af);
 
     [er, bad] = cnntest(cnn, test_x, test_y, opts, af);
     fprintf('Testing Accuracy: %2.2f%%.\n', (1-er)*100);
     
+    
+    %tidy up fileds of cnn to be saved
+    cnn = file_clean(cnn);
+    cnn.acc = (1-er)*100;
+    cnn.randseed = opts.randseed;
+    cnn.numepochs =  opts.numepochs;
+    cnn.af_file = af_file;
+    cnn.config_file = config_file;
+    
     %result file name
-    fname = sprintf('results/%s_e%d_r%d_acc%2.2f.mat', af.name, opts.numepochs, opts.randseed, (1-er)*100);
+    %fname = sprintf('results/%s_e%d_r%d_acc%2.2f.mat', af.name, opts.numepochs, opts.randseed, (1-er)*100);
+    fname = sprintf('results/%s.mat', result_file);
     save(fname, 'cnn');
     
     %plot mean squared error  

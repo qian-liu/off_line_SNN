@@ -17,7 +17,6 @@ function net = cnntrain(net, x, y, opts, af)
         for l = 1 : numbatches
             batch_x = x(:, :, kk((l - 1) * opts.batchsize + 1 : l * opts.batchsize));
             batch_y = y(:,    kk((l - 1) * opts.batchsize + 1 : l * opts.batchsize));
-
             net = cnnff(net, batch_x, opts, af);
             net = cnnbp(net, batch_y, opts, af);
             net = cnnapplygrads(net, opts);

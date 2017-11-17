@@ -1,5 +1,6 @@
 # off_line_SNN
-off-line training of SNN in Matlab and SNN testing in PyNN lauguage (still under tidy-up).
+off-line training of SNN in Matlab and SNN testing in PyNN lauguage (still under tidy-up).   
+The first version of SNN trainig is written in Matlab, which is a modification of the DeepLearnToolbox (https://github.com/rasmusbergpalm/DeepLearnToolbox).
 
 ## Usage of Matlab_PAF
 1. in your command window go to the dir Matlab_PAF
